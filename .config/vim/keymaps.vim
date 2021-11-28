@@ -1,258 +1,166 @@
-noremap <SPACE> <Nop>
-let mapleader = "\<Space>"
+" TextEdit might fail if hidden is not set.
+set hidden
 
-" GETTING ALT MAPPINGS TO WORK---------------------- {{{
-" 
-" for only one key, just this is enough: execute "set <M-d>=\ed"
-" but let's do a loop to set all keys in case of future use
-let c='a'
-while c <= 'z'
-    exec "set <A-".c.">=\e".c
-    exec "imap \e".c." <A-".c.">"
-    let c = nr2char(1+char2nr(c))
-endw
-" if <timeout, vim knows <esc>char is alt+char. If longer, it's two keystrokes
-set timeout ttimeoutlen=5
-" ------------------------------------------- }}}
+" Some servers have issues with backup files, see #649.
+set nobackup
+set nowritebackup
 
-fun GotoWindow(id)
-    call win_gotoid(a:id)
-    MaximizerToggle
-endfun
-nnoremap <leader>m :MaximizerToggle!<CR>
+" Give more space for displaying messages.
+set cmdheight=2
 
-" DEBUG MAPPINGS---------------------- {{{
-" Set the basic sizes
-let g:vimspector_sidebar_width = 60
-let g:vimspector_code_width = 80
-function! s:CustomiseUI()
-    " Close the output window
-    call win_gotoid( g:vimspector_session_windows.output  )
-    q
-    "start in code window
-    call win_gotoid( g:vimspector_session_windows.code  )
-    " Clear the existing WinBar created by Vimspector
-    nunmenu WinBar
-endfunction
-function s:SetUpTerminal()
-    " Customise the terminal window size/position
-    " For some reasons terminal buffers in Neovim have line numbers
-    call win_gotoid( g:vimspector_session_windows.terminal  )
-    q
+" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
+" delays and poor user experience.
+set updatetime=300
+
+" Don't pass messages to |ins-completion-menu|.
+set shortmess+=c
+
+" " Always show the signcolumn, otherwise it would shift the text each time
+" " diagnostics appear/become resolved.
+"  if has("patch-8.1.1564")
+"   " Recently vim can merge signcolumn and number column into one
+"   set signcolumn=number
+" else
+"   set signcolumn=yes
+" endif
+
+" Use tab for trigger completion with characters ahead and navigate.
+" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+" other plugin before putting this into your config.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
-augroup MyVimspectorUICustomistaion
-    autocmd!
-    autocmd User VimspectorUICreated call s:CustomiseUI()
-    autocmd User VimspectorTerminalOpened call s:SetUpTerminal()
-augroup END
+" Use <c-space> to trigger completion.
+"if has('nvim')
+"  inoremap <silent><expr> <c-space> coc#refresh()
+"else
+"  inoremap <silent><expr> <c-@> coc#refresh()
+"endif
 
-nnoremap <A-d> :call vimspector#Launch()<CR>
+" Make <CR> auto-select the first completion item and notify coc.nvim to
+" format on enter, <cr> could be remapped by other vim plugin
+"inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+" Use <cr> for confirm completion, `<C-g>u` means break undo chain at current position.
+" Coc only does snippet and additional edit on confirm.
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>" 
 
-nnoremap <leader>dc :call GotoWindow(g:vimspector_session_windows.code)<CR>
-nnoremap <leader>dt :call GotoWindow(g:vimspector_session_windows.tagpage)<CR>
-nnoremap <leader>dv :call GotoWindow(g:vimspector_session_windows.variables)<CR>
-nnoremap <leader>dw :call GotoWindow(g:vimspector_session_windows.watches)<CR>
-nnoremap <leader>ds :call GotoWindow(g:vimspector_session_windows.stack_trace)<CR>
-nnoremap <leader>do :call GotoWindow(g:vimspector_session_windows.output)<CR>
-
-nnoremap <A-i> :call vimspector#StepInto()<CR>
-nnoremap <A-n> :call vimspector#StepOver()<CR>
-nnoremap <A-o> :call vimspector#StepOut<()CR>
-nnoremap <A-t> :call vimspector#RunToCursor()<CR>
-nnoremap <A-r> :call vimspector#Continue()<CR>
-
-nnoremap <A-e> :call vimspector#Reset()<CR>
-nnoremap <A-z> :call vimspector#Restart()<CR>
-
-nnoremap <A-b> :call vimspector#ToggleBreakpoint()<CR>
-" ------------------------------------------- }}}
+" Use `[g` and `]g` to navigate diagnostics
+" Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
 
 
-" Standard NORMAL mode mappings---------------------- {{{
-nnoremap Y y$
+" " GoTo code navigation.
+" nmap <silent> gd <Plug>(coc-definition)
+" nmap <silent> gy <Plug>(coc-type-definition)
+" nmap <silent> gi <Plug>(coc-implementation)
+" nmap <silent> gr <Plug>(coc-references)
+nmap  gd <Plug>(coc-definition)
+nmap  gy <Plug>(coc-type-definition)
+nmap  gi <Plug>(coc-implementation)
+nmap  gr <Plug>(coc-references)
 
-" Window navigation
-nnoremap <silent> <c-h> <c-w><c-h>
-nnoremap <silent> <c-l> <c-w><c-l>
-nnoremap <silent> <a-s> <c-w>r " swap windows
-nnoremap <silent> <c-left> :vertical resize -5<CR>
-nnoremap <silent> <c-right> :vertical resize +5<CR>
-nnoremap <silent> <a-u> :UndotreeToggle <CR>
-
-" when using smooth scrolling plugins, relativnmb doesnt update until you go down/up one line
-nnoremap <c-u> <c-u>j
-nnoremap <c-d> <c-d>k
-nnoremap <c-f> <c-f>j
-nnoremap <c-y> <c-y>k
-
-" Keep search maches in the middle of the window and pulse the mach when moving
-nnoremap n nzzzv
-nnoremap N Nzzzv
-
-" Don't move to next word on *
-nnoremap * *<c-o>
-" Same when running around
-nnoremap g; g;zz
-nnoremap g, g,zz
- 
-" faster %s
-nnoremap <leader>s :%s/
-
-" clear screen (cltr-l)clears highlighted searches
-nnoremap <silent> <a-l> :nohlsearch<CR><c-l>
-"split line at cursor (default K is man page of word under cursor)
-nnoremap K i<CR><Esc>
-" Ctrl-j deletes the line below the current line, if it's blank
-nnoremap <silent><C-j> m`:silent +g/\m^\s*$/d<CR>``:noh<CR>
-" Ctrl-k deletes the line above the current line, if it's blank
-nnoremap <silent><C-k> m`:silent -g/\m^\s*$/d<CR>``:noh<CR>
-" insert blank line above
-nnoremap <silent><leader>j :set paste<CR>m`o<Esc>``:set nopaste<CR>
-" insert blank line bellow
-nnoremap <silent><leader>k :set paste<CR>m`O<Esc>``:set nopaste<CR>
-
-" Syntax group under cursor
-nnoremap <leader>h :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
-            \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
-            \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
+" function! s:show_documentation()
+"   if (index(['vim','help'], &filetype) >= 0)
+"     execute 'h '.expand('<cword>')
+"   elseif (coc#rpc#ready())
+"     call CocActionAsync('doHover')
+"   else
+"     execute '!' . &keywordprg . " " . expand('<cword>')
+"   endif
+" endfunction
 
 
-nnoremap <A-c> :make<CR>
-set makeprg=clang\ -g\ -std=c++17\ -lstdc++\ -lm\ -ltbb\ -Wall\ -Wextra\ -o\ binary\ % 
+" Highlight the symbol and its references when holding the cursor.
+" autocmd CursorHold * silent call CocActionAsync('highlight')
 
-" run from vim
-nnoremap <A-x> :!./binary<CR>
+" Symbol renaming.
+nmap <leader>rn <Plug>(coc-rename)
 
-nnoremap <leader>vm :e $MYVIMRC<CR>
-nnoremap <leader>vk :e ~/.config/vim/keymaps.vim<CR>
-nnoremap <leader>vc :e ~/.config/vim/color.vim<CR>
-nnoremap <leader>vs :source %<CR>
-" change or delete mapping for word under cursor. n/N to skip, . to repeat
-nnoremap c* /\<<C-R>=expand('<cword>')<CR>\>\C<CR>``cgn
-nnoremap c# ?\<<C-R>=expand('<cword>')<CR>\>\C<CR>``cgN
-nnoremap d* /\<<C-r>=expand('<cword>')<CR>\>\C<CR>``dgn
-nnoremap d# ?\<<C-r>=expand('<cword>')<CR>\>\C<CR>``dgN
-" ------------------------------------------- }}}
+" Formatting selected code.
+xmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
 
-" Standard VISUAL mode mappings---------------------- {{{
-nnoremap Y y$
-"because I would rather do > three times than do ><ESC>...
-"keep lines selected after yo've indented them
-xnoremap > >gv
-xnoremap < <gv
-xnoremap <Tab> >gv
-xnoremap <S-Tab> <gv
-
-" Focus current fold (fold all others)
-nnoremap <leader>z zMzvzz
-" ------------------------------------------- }}}
-
-" Standard INSERT mode mappings---------------------- {{{
-" during insert mode ctrl-k turns current Word into upercase and goes back to insert
-inoremap <c-k> <esc>gUiWEa
-" easier line autocomplete
-inoremap <c-l> <c-x><c-l> 
-" autocoplete the rest of the line above
-inoremap <c-s> <esc>kly$jpa
-" autocomplete the rest of the word above 
-inoremap <c-w> x<esc>xklyWjpa
-inoremap <c-a> <esc>I
-inoremap <c-e> <esc>A
-
-
-" ------------------------------------------- }}}
-
-" Standard COMMAND mode mappings---------------------- {{{
-cnoremap <c-a> <home>
-cnoremap <c-e> <end>
-"oopsie, forgot to open file in sudo
-cmap w!! w !sudo tee % >/dev/null 
-" ------------------------------------------- }}}
-
-" Scroll wheel inserts ABCD in insert mode----------- {{{
-" change it to NOP
-"imap <ESC>OA <nop>
-"imap <ESC>OB <nop>
-"imap <ESC>OC <nop>
-"imap <ESC>OD <nop>
-" ------------------------------------------- }}}
-
-" C/CPP abreviations ---------------------- {{{
-augroup filetype_c
-    autocmd!
-    autocmd FileType c :iabbrev <buffer> rt return ;<left>
-    autocmd FileType cpp :iabbrev <buffer> rt return ;<left>
-    autocmd FileType c :iabbrev <buffer> return PLEASEUSE_RT_ABREV
-    autocmd FileType cpp :iabbrev <buffer> return PLEASEUSE_RT_ABREV
-augroup END
-" ------------------------------------------- }}}
- 
-let g:floaterm_width=0.9
-let g:floaterm_height=0.9
-let g:floaterm_title=""
-nnoremap   <silent>   <C-t>  :FloatermToggle<CR>
-tnoremap   <silent>   <C-t>   <C-\><C-n>:FloatermToggle <CR>
-augroup terminal 
-    autocmd!
-    autocmd QuitPre * :FloatermKill<CR>
+augroup mygroup
+  autocmd!
+  " Setup formatexpr specified filetype(s).
+  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+  " Update signature help on jump placeholder.
+  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 augroup end
 
-" use sane regexes
-nnoremap / /\v
-nnoremap ? ?\v
-vnoremap / /\v
-vnoremap ? ?\v
+" Applying codeAction to the selected region.
+" Example: `<leader>aap` for current paragraph
+"xmap <leader>a  <Plug>(coc-codeaction-selected)
+"nmap <leader>a  <Plug>(coc-codeaction-selected)
 
-cnoremap <expr> v% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
+" Remap keys for applying codeAction to the current buffer.
+nmap <leader>ac  <Plug>(coc-codeaction)
+" Apply AutoFix to problem on the current line.
+nmap <leader>qf  <Plug>(coc-fix-current)
 
-" - Open FZXF search in vim
-" map <C-p> <Esc><Esc>:Files!<CR> "doesn't ignore .gitingore"
-map <C-p> <Esc><Esc>:GFiles!<CR>
-map <A-g> <Esc><Esc>:Ag<CR>
+" Map function and class text objects
+" NOTE: Requires 'textDocument.documentSymbol' support from the language server.
+xmap if <Plug>(coc-funcobj-i)
+omap if <Plug>(coc-funcobj-i)
+xmap af <Plug>(coc-funcobj-a)
+omap af <Plug>(coc-funcobj-a)
+xmap ic <Plug>(coc-classobj-i)
+omap ic <Plug>(coc-classobj-i)
+xmap ac <Plug>(coc-classobj-a)
+omap ac <Plug>(coc-classobj-a)
 
-"in vmode hit r to paste onto selected
-vmap r "_dP 
+" Remap <C-f> and <C-b> for scroll float windows/popups.
+if has('nvim-0.4.0') || has('patch-8.2.0750')
+  nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+  nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+  inoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
+  inoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
+  vnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+  vnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+endif
 
-"nnoremap [a :cfirst<CR>
-"nnoremap [s :cprev<CR>
-"nnoremap [d :cnext<CR>
-"nnoremap [f :clast<CR>
-"nnoremap [x :cclose<CR>
-"nnoremap [z :copen<CR>
+" Use CTRL-S for selections ranges.
+" Requires 'textDocument/selectionRange' support of language server.
+nmap <silent> <C-s> <Plug>(coc-range-select)
+xmap <silent> <C-s> <Plug>(coc-range-select)
 
-" SEARCH AND REPLACE
-" Press * to search for the term under the cursor
-" or a visual selection (requres visual * plugin)
-" press <leader?r to replace all instances of it in the current file 
-"nnoremap <Leader>r :%s///g<Left><Left>
-"nnoremap <Leader>rc :%s///gc<Left><Left><Left>
-" replace only in visual selection
-"xnoremap <Leader>r :%s///g<Left><Left>
-"xnoremap <Leader>rc :%s///gc<Left><Left><Left>
-" add semicolom at end of line in normal or insert mode 
-"inoremap <> <esc>mm$a;<esc>`ma
-"nnoremap <> <esc>mm$a;<esc>`m
+" Add `:Format` command to format current buffer.
+command! -nargs=0 Format :call CocAction('format')
 
-" Start NERDTree when Vim is started without file arguments.
-"autocmd StdinReadPre * let s:std_in=1
-"autocmd VimEnter * if argc() == 0 && !exists('s:std_in') | NERDTree | endif
-"" Start NERDTree and put the cursor back in the other window.
-"autocmd VimEnter * NERDTree | wincmd p
-"
-"nnoremap <C-h> :NERDTreeFocus<CR>
-"nnoremap <C-n> :NERDTree<CR>
-"nnoremap <C-t> :NERDTreeToggle<CR>
-""noremap <C-f> :NERDTreeFind<CR>
-"let g:NERDTreeWinSize=20
-"" If it's the last window, close it: 
-"autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+" Add `:Fold` command to fold current buffer.
+command! -nargs=? Fold :call     CocAction('fold', <f-args>)
 
-"
-"inoremap <C-x> <eSC>:wq<CR>
-"nnoremap <C-x> <eSC>:wq<CR>
+" Add `:OR` command for organize imports of the current buffer.
+command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
 
-"for incremental search
-"map /  <Plug>(incsearch-forward)
-"map ?  <Plug>(incsearch-backward)
-"map g/ <Plug>(incsearch-stay)
+" Add (Neo)Vim's native statusline support.
+" NOTE: Please see `:h coc-status` for integrations with external plugins that
+" provide custom statusline: lightline.vim, vim-airline.
+set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+
+" Mappings for CoCList
+" Show all diagnostics.
+nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
+" Manage extensions.
+"nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
+" Show commands.
+"nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
+" Find symbol of current document.
+"nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
+" Search workspace symbols.
+"nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
+" Do default action for next item.
+"nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
+" Do default action for previous item.
+"nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
+" Resume latest coc list.
+"nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
