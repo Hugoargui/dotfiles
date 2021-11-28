@@ -72,6 +72,11 @@ nnoremap <A-b> :call vimspector#ToggleBreakpoint()<CR>
 " Standard NORMAL mode mappings---------------------- {{{
 nnoremap Y y$
 
+" Buffer navigation
+nnoremap <silent> <left> :bprevious<CR>
+nnoremap <silent> <right> :bnext<CR>
+nnoremap <silent> <end> <c-^>
+
 " Window navigation
 nnoremap <silent> <c-h> <c-w><c-h>
 nnoremap <silent> <c-l> <c-w><c-l>
