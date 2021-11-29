@@ -15,6 +15,9 @@ export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
+# To avoid getting zcompdump files in ~
+export ZDOTDIR=/etc/zsh/zshenv
+
 HISTSIZE=10000
 SAVEHIST=10000
 HISTFILE=~/.cache/zsh/history
