@@ -90,34 +90,3 @@ if has('folding')
     set foldtext=CustomFoldText()
 endif
 " ------------------------------------------- }}}
-
-"open quickfix automagically and on left sidepane
-"augroup quickfixWindow
-    "autocmd!
-    "autocmd QuickFixCmdPost [^l]* cwindow
-    "autocmd QuickFixCmdPost l* lwindow
-    "autocmd FileType qf wincmd L
-"augroup END
-
-" NERDTREE SHIT ------------------------------- {{{
-"open help window maximized automatically
-"augroup filetype_help
-"    autocmd!  autocmd BufWinEnter * if &l:buftype ==# 'help' | wincmd _ | endif
-"augroup END
-
-"let NERDTreeMinimalUI=1 "dont display Press? for help and press .. for up a dir on top
-":autocmd FileType nerdtree set norelativenumber
-":autocmd FileType taglist set norelativenumber
-":autocmd User NERDTreeInit global/src/normal o
-":autocmd User NERDTreeInit global/inc/normal o
-":autocmd FileType nerdtree hi NonText guibg=NONE guifg=Black gui=NONE
-"":autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree && b:NERDTree.isTabTree()) | q | endif
-"
-""Nerdtree config for wildignore
-"set wildignore+=*.pyc,*.o,*.obj,*.svn,*.swp,*.class,*.hg,*.DS_Store,*.min.*
-"let NERDTreeRespectWildIgnore=1
-"let NERDTreeIgnore=['compile_commands.json']
-"
-""Highlight currently open  buffer in NERDTree
-"autocmd BufEnter * if &modifiable | NERDTreeFind | wincmd p | endif
-" ------------------------------------------- }}}
