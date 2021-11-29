@@ -193,6 +193,8 @@ augroup filetype_c
 augroup END
 " ------------------------------------------- }}}
 
+let g:floaterm_wintype='float'
+let g:floaterm_position='center'
 let g:floaterm_width=0.9
 let g:floaterm_height=0.9
 let g:floaterm_title=""
@@ -200,7 +202,7 @@ nnoremap   <silent>   <C-t>  :FloatermToggle<CR>
 tnoremap   <silent>   <C-t>   <C-\><C-n>:FloatermToggle <CR>
 augroup terminal 
     autocmd!
-    autocmd QuitPre * :FloatermKill<CR>
+    autocmd QuitPre * :FloatermKill!<CR>
 augroup end
 
 " use sane regexes
@@ -238,24 +240,6 @@ vmap r "_dP
 " add semicolom at end of line in normal or insert mode 
 "inoremap <> <esc>mm$a;<esc>`ma
 "nnoremap <> <esc>mm$a;<esc>`m
-
-" Start NERDTree when Vim is started without file arguments.
-"autocmd StdinReadPre * let s:std_in=1
-"autocmd VimEnter * if argc() == 0 && !exists('s:std_in') | NERDTree | endif
-"" Start NERDTree and put the cursor back in the other window.
-"autocmd VimEnter * NERDTree | wincmd p
-"
-"nnoremap <C-h> :NERDTreeFocus<CR>
-"nnoremap <C-n> :NERDTree<CR>
-"nnoremap <C-t> :NERDTreeToggle<CR>
-""noremap <C-f> :NERDTreeFind<CR>
-"let g:NERDTreeWinSize=20
-"" If it's the last window, close it: 
-"autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-
-"
-"inoremap <C-x> <eSC>:wq<CR>
-"nnoremap <C-x> <eSC>:wq<CR>
 
 "for incremental search
 "map /  <Plug>(incsearch-forward)
