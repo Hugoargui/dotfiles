@@ -27,17 +27,17 @@ let g:vimspector_sidebar_width = 60
 let g:vimspector_code_width = 80
 function! s:CustomiseUI()
     " Close the output window
-    call win_gotoid( g:vimspector_session_windows.output  )
+    call win_gotoid( g:vimspector_session_windows.output   )
     q
     "start in code window
-    call win_gotoid( g:vimspector_session_windows.code  )
+    call win_gotoid( g:vimspector_session_windows.code   )
     " Clear the existing WinBar created by Vimspector
     nunmenu WinBar
 endfunction
 function s:SetUpTerminal()
     " Customise the terminal window size/position
     " For some reasons terminal buffers in Neovim have line numbers
-    call win_gotoid( g:vimspector_session_windows.terminal  )
+    call win_gotoid( g:vimspector_session_windows.terminal   )
     q
 endfunction
 
@@ -72,6 +72,11 @@ nnoremap <A-b> :call vimspector#ToggleBreakpoint()<CR>
 " Standard NORMAL mode mappings---------------------- {{{
 nnoremap Y y$
 
+" Buffer navigation
+nnoremap <silent> <left> :bprevious<CR>
+nnoremap <silent> <right> :bnext<CR>
+nnoremap <silent> <end> <c-^>
+
 " Window navigation
 nnoremap <silent> <c-h> <c-w><c-h>
 nnoremap <silent> <c-l> <c-w><c-l>
@@ -95,7 +100,7 @@ nnoremap * *<c-o>
 " Same when running around
 nnoremap g; g;zz
 nnoremap g, g,zz
- 
+
 " faster %s
 nnoremap <leader>s :%s/
 
@@ -187,7 +192,7 @@ augroup filetype_c
     autocmd FileType cpp :iabbrev <buffer> return PLEASEUSE_RT_ABREV
 augroup END
 " ------------------------------------------- }}}
- 
+
 let g:floaterm_width=0.9
 let g:floaterm_height=0.9
 let g:floaterm_title=""
