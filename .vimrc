@@ -37,6 +37,12 @@ augroup line_return
                 \     execute 'normal! g`"zvzz' |
                 \ endif
 augroup END
+" Don't polute ~ with .viminfo file
+if has("nvim")
+    let &viminfo .= '.nvim'
+else
+    set viminfo+=n~/.vim/viminfo
+endif
 " ------------------------------------------- }}}
 
 " Removing command line ----------------------- {{{
