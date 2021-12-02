@@ -16,13 +16,17 @@ set nobackup
 set undofile
 set history=1000
 set undoreload=10000
-set undodir=~/.vim/tmp/undo//
+if has("nvim")
+    set undodir=~/.vim/tmp/nvimundo//
+else
+    set undodir=~/.vim/tmp/undo//
+endif 
 set backupskip=/tmp/*,/private/tmp*" "otherwise VIM breaks when editing cron tabs
 set lazyredraw "macros much faster
 set ignorecase
 set smartcase
 "make ESC fast again
-set noesckeys 
+" set noesckeys "this option is pointless in nvim"
 set timeoutlen=1000
 set ttimeoutlen=50
 "eliminate pipe in separators, like nerdtree etc
@@ -52,10 +56,16 @@ set shortmess+=F "get rid of the file name displayed in the command line bar"
 " a simple set doesnt work as ftpplugin (builtin vim shit) sets += cro
 autocmd FileType * set formatoptions-=cro
 
+" FZF config ---------------------------- {{{
 let g:fzf_layout = { 'window': { 'width': 1, 'height': 1 } }
-let $FZF_DEFAULT_OPS="--ansi --preview-window 'right:70% --layout reverse'" 
-eval "fzf $FZF_DEFAULT_OPS"
+if has('nvim')
+    " todo how to fix this
+else
+    let $FZF_DEFAULT_OPS="--ansi --preview-window 'right:70% --layout reverse'" 
+    eval "fzf $FZF_DEFAULT_OPS"
+endif
 
+" ------------------------------------------- }}}
 
 set helpheight=9999
 
@@ -64,7 +74,6 @@ augroup filetype_vim
     autocmd FileType vim setlocal foldmethod=marker
     autocmd FileType vim setlocal foldlevelstart=0 "start with folds closed
 augroup END
-
 
 " Custom fold text ---------------------------- {{{
 " override default `foldtext()`, which produces something like:

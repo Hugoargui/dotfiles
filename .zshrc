@@ -168,6 +168,7 @@ alias cat="batcat"
 alias ag="ag --path-to-ignore ~/.ignore"
 alias zshconfig="sudo vim ~/.zshrc"
 alias glog="git log --oneline --graph --all"
+alias v="vim"
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 source ~/powerlevel10k/powerlevel10k.zsh-theme

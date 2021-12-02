@@ -16,6 +16,11 @@ Plug 'szw/vim-maximizer'
 
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+if has("nvim")
+    Plug 'nvim-lua/plenary.nvim'
+    Plug 'nvim-telescope/telescope.nvim'
+endif
+
 Plug 'haya14busa/incsearch.vim'
 " todo replace by haya14busa/is.vim
 Plug 'nelstrom/vim-visual-star-search'
@@ -25,8 +30,15 @@ Plug 'jiangmiao/auto-pairs'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'wellle/targets.vim'
 
-Plug 'nathanaelkane/vim-indent-guides'
-" Plug 'lukas-reineke/indent-blankline' works only on nvim
+" if has("nvim")
+    " Plug 'lukas-reineke/indent-blankline' "works only on nvim
+    " Plug 'Yggdroot/indentLine'
+    Plug 'lukas-reineke/indent-blankline.nvim', { 'branch': 'lua' }
+" else
+    Plug 'nathanaelkane/vim-indent-guides'
+" endif
+
+"todo maybe replace by junegunn/rainbow_parentheses?
 Plug 'frazrepo/vim-rainbow'
 
 Plug 'tpope/vim-commentary'
@@ -40,9 +52,11 @@ Plug 'octol/vim-cpp-enhanced-highlight'
 " Plug 'https://github.com/mphe/grayout' not working find alternative
 
 " +++++++++++++++++++++++++++++ Color schemes ++++++++++++++++++++++++++++++
-" Plug 'https://github.com/mhartington/oceanic-next.git'
-" Plug 'https://github.com/chriskempson/base16-vim.git'
-" Plug 'https://github.com/fmoralesc/molokayo.git'
+Plug 'https://github.com/mhartington/oceanic-next.git'
+Plug 'https://github.com/fmoralesc/molokayo.git'
+Plug 'arcticicestudio/nord-vim'
+Plug 'dracula/vim', { 'name': 'dracula' }
+Plug 'altercation/vim-colors-solarized'
 Plug 'https://github.com/morhetz/gruvbox.git'
 " ==========================================================================
 

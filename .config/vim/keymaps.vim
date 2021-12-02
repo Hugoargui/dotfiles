@@ -5,12 +5,17 @@ let mapleader = "\<Space>"
 " 
 " for only one key, just this is enough: execute "set <M-d>=\ed"
 " but let's do a loop to set all keys in case of future use
-let c='a'
-while c <= 'z'
-    exec "set <A-".c.">=\e".c
-    exec "imap \e".c." <A-".c.">"
-    let c = nr2char(1+char2nr(c))
-endw
+if has('nvim')
+    "to do nvim complains about exec set <A-a>=a
+    "but it seems to work fine? without this? 
+else
+    let c='a'
+    while c <= 'z'
+        exec "set <A-".c.">=\e".c
+        exec "imap \e".c." <A-".c.">"
+        let c = nr2char(1+char2nr(c))
+    endw
+endif
 " if <timeout, vim knows <esc>char is alt+char. If longer, it's two keystrokes
 set timeout ttimeoutlen=5
 " ------------------------------------------- }}}
@@ -69,7 +74,14 @@ nnoremap <A-b> :call vimspector#ToggleBreakpoint()<CR>
 " ------------------------------------------- }}}
 
 
-" Standard NORMAL mode mappings---------------------- {{{
+" " Standard NORMAL mode mappings---------------------- {{{
+" " weird change of background in blankindent lines
+" if has("nvim")
+"     nnoremap <silent><j> j :IndentBlanklineRefresh<CR>
+"     nnoremap <silent><k> k :IndentBlanklineRefresh<CR>
+" endif
+
+nnoremap <c-c> :Telescope colorscheme<CR>
 nnoremap Y y$
 
 " Buffer navigation
@@ -105,7 +117,11 @@ nnoremap g, g,zz
 nnoremap <leader>s :%s/
 
 " clear screen (cltr-l)clears highlighted searches
-nnoremap <silent> <a-l> :nohlsearch<CR><c-l>
+if has("nvim")
+    nnoremap <silent> <a-l> :nohlsearch<CR>:IndentBlanklineRefresh<CR><c-l>
+else
+    nnoremap <silent> <a-l> :nohlsearch<CR><c-l>
+endif
 "split line at cursor (default K is man page of word under cursor)
 nnoremap K i<CR><Esc>
 " Ctrl-j deletes the line below the current line, if it's blank
@@ -129,7 +145,8 @@ set makeprg=clang\ -g\ -std=c++17\ -lstdc++\ -lm\ -ltbb\ -Wall\ -Wextra\ -o\ bin
 " run from vim
 nnoremap <A-x> :!./binary<CR>
 
-nnoremap <leader>vm :e $MYVIMRC<CR>
+" nnoremap <leader>vm :e $MYVIMRC<CR>
+nnoremap <leader>vm :e ~/.vimrc<CR>
 nnoremap <leader>vk :e ~/.config/vim/keymaps.vim<CR>
 nnoremap <leader>vc :e ~/.config/vim/color.vim<CR>
 nnoremap <leader>vs :source %<CR>
@@ -213,8 +230,14 @@ cnoremap <expr> v% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
 
 " - Open FZXF search in vim
 " map <C-p> <Esc><Esc>:Files!<CR> "doesn't ignore .gitingore"
-map <C-p> <Esc><Esc>:GFiles!<CR>
-map <A-g> <Esc><Esc>:Ag<CR>
+if has("nvim")
+    " nnoremap <C-p> <cmd>Telescope find_files<cr>
+    nnoremap <C-p> <cmd>Telescope git_files<cr>
+    nnoremap <A-g> <cmd>Telescope live_grep<cr>
+else
+    map <C-p> <Esc><Esc>:GFiles!<CR>
+    map <A-g> <Esc><Esc>:Ag<CR>
+endif
 
 "in vmode hit r to paste onto selected
 vmap r "_dP 
