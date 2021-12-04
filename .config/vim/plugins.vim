@@ -45,9 +45,12 @@ Plug 'wellle/targets.vim'
     Plug 'nathanaelkane/vim-indent-guides'
 " endif
 
-"todo maybe replace by junegunn/rainbow_parentheses?
+" todo maybe replace by junegunn/rainbow_parentheses?
 Plug 'frazrepo/vim-rainbow'
+" this one seems bettern in theory but the colors are less vibrant
 
+
+Plug 'junegunn/rainbow_parentheses.vim'
 Plug 'tpope/vim-commentary'
 
 " Plug 'vim-scripts/RltvNmbr.vim'
