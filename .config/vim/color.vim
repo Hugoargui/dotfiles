@@ -55,7 +55,6 @@ else
     let g:indent_guides_guide_size = 1
 endif
 
-let g:rainbow_active=1
 
 "this doesnt work with i3
 "autocmd WinEnter,FocusGained * RltvNmbr
@@ -73,10 +72,14 @@ hi IncSearch                                     ctermbg = 235          ctermfg 
 "    hi iCursor                                       ctermbg = Black         ctermfg = White 
 "    hi Type                                                                  ctermfg = Yellow
 "   hi String                                        ctermbg = DarkGrey      ctermfg = Yellow
-hi String                                        ctermbg = 237      ctermfg = Yellow
-hi Special                                       ctermbg = 237      ctermfg = 121
-hi Character                                     ctermbg = 237             ctermfg = 4
-hi Number                 cterm = bold           ctermbg = 237           ctermfg = 175
+
+""this ones were ok, removing to see how it looks with unfocused window
+"hi String                                        ctermbg = 237      ctermfg = Yellow
+"hi Special                                       ctermbg = 237      ctermfg = 121
+"hi Character                                     ctermbg = 237             ctermfg = 4
+"hi Number                 cterm = bold           ctermbg = 237           ctermfg = 175
+"" after this it wasn't being used
+
 "    hi Function                                                              ctermfg = Green
 "    hi Operator                                                                             ctermfg = White
 "    hi Identifier                                                                           ctermfg = Green
@@ -97,8 +100,17 @@ augroup CursorLine
     au BufWinEnter * setlocal cursorline
     au WinLeave * setlocal nocursorline
 augroup END
+let g:rainbow_active=1
+augroup RainbowParens
+    au!
+    au VimEnter * let g:rainbow_active=1
+    au WinEnter * let g:rainbow_active=1
+    au BufWinEnter * let g:rainbow_active=1
+    au WinLeave * let g:rainbow_active=0
+augroup END
 " let g:vimade = {}
 " let g:vimade.fadelevel = 0.5
+
 
 "hi cursorLine                                                       cterm=none ctermbg=DarkGrey
 "hi CursorLineNr                                                     cterm=none ctermbg=DarkGrey ctermfg=DarkGrey

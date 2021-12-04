@@ -15,12 +15,15 @@ export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
-# To avoid getting zcompdump files in ~
+# To avoid random crap in ~
 export ZDOTDIR=/etc/zsh/zshenv
 
 HISTSIZE=10000
 SAVEHIST=10000
 HISTFILE=~/.cache/zsh/history
+
+# To avoid getting zcompdump files in ~
+compinit -d ~/.cache/zsh/zcompdump-$ZSH_VERSION
 
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
 ZSH_THEME="powerlevel10k/powerlevel10k"

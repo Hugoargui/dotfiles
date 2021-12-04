@@ -9,14 +9,18 @@ fi
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH="$HOME/.oh-my-zsh"
+# export ZSH="$HOME/.oh-my-zsh"
+export ZSH="$HOME/dotfiles/.oh-my-zsh"
 
-# To avoid getting zcompdump files in ~
+# To avoid random crap in ~
 export ZDOTDIR=/etc/zsh/zshenv
 
 HISTSIZE=10000
 SAVEHIST=10000
 HISTFILE=~/.cache/zsh/history
+
+# to avoid zcompdump files in ~
+compinit -d ~/.cache/zsh/zcompdump-$ZSH_VERSION
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
